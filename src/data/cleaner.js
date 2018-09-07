@@ -50,3 +50,12 @@ const combindData = (precip, temp) => {
   return combindData;
 }
 
+
+const precipFinal = JSON.stringify(cleanData(precipData));
+const tempFinal = JSON.stringify(cleanData(tempData));
+// const finalData = JSON.stringify(combindData(cleanData(precipData), cleanData(tempData)));
+
+
+fs.writeFileSync('precipData.json', precipFinal); 
+fs.writeFileSync('tempData.json', tempFinal); 
+// fs.writeFileSync('finalData.json', finalData); 
