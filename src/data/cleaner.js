@@ -19,6 +19,34 @@ const cleanData = (data) => {
   return dataObject;
 };
 
+const combindData = (precip, temp) => {
+  const largerList = precip.length >= temp.length ? precip : temp;
+  const smallerList = precip.length <= temp.length ? precip : temp;
+  
+  const combindData = largerList.map(largeElement => {
+    let newElement = largeElement;
 
+    const matchingElement = smallerList.filter(smallElement => {
+      const { year, mon, day } = smallElement;
 
+      if (
+        largeElement.year === year &&
+        largeElement.mon === mon &&
+        largeElement.day === day
+      ) {
+        return true;
+      }
+
+      return;
+    });
+    
+    if (matchingElement.length) {
+      newElement = Object.assign(largeElement, matchingElement[0]);
+    }
+    
+    return newElement;
+  });
+
+  return combindData;
+}
 
