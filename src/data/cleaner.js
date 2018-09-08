@@ -11,7 +11,11 @@ const cleanData = (data) => {
     let cellObject = {};
     for (var i = 0; i < el.length; i++) {
       let cleanHeading = headings[i].replace(/,\s*$/, "")
-      cellObject[cleanHeading] = el[i];
+      if (el[i] < -100) {
+        cellObject[cleanHeading] = 0;
+      } else {
+        cellObject[cleanHeading] = parseInt(el[i]);
+      }
     }
     return cellObject;
   });
@@ -53,9 +57,9 @@ const combindData = (precip, temp) => {
 
 const precipFinal = JSON.stringify(cleanData(precipData));
 const tempFinal = JSON.stringify(cleanData(tempData));
-// const finalData = JSON.stringify(combindData(cleanData(precipData), cleanData(tempData)));
+const finalData = JSON.stringify(combindData(cleanData(precipData), cleanData(tempData)));
 
 
 fs.writeFileSync('precipData.json', precipFinal); 
 fs.writeFileSync('tempData.json', tempFinal); 
-// fs.writeFileSync('finalData.json', finalData); 
+fs.writeFileSync('finalData.json', finalData); 
