@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { VictoryTheme, VictoryAxis, VictoryChart, VictoryCandlestick } from 'victory';
+import { Route, NavLink, Link } from 'react-router-dom'
 
 import weatherData from './data/tempData.json';
 import './App.css';
