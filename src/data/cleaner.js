@@ -20,7 +20,7 @@ const cleanData = (data) => {
     return cellObject;
   });
 
-  return dataObject;
+  return dataObject
 };
 
 const combindData = (precip, temp) => {
@@ -47,12 +47,12 @@ const combindData = (precip, temp) => {
     if (matchingElement.length) {
       newElement = Object.assign(largeElement, matchingElement[0]);
     }
-    
+
     return newElement;
   });
 
   return combindData;
-}
+};
 
 
 const precipFinal = JSON.stringify(cleanData(precipData));
@@ -60,6 +60,6 @@ const tempFinal = JSON.stringify(cleanData(tempData));
 const finalData = JSON.stringify(combindData(cleanData(precipData), cleanData(tempData)));
 
 
-fs.writeFileSync('precipData.json', precipFinal); 
-fs.writeFileSync('tempData.json', tempFinal); 
-fs.writeFileSync('finalData.json', finalData); 
+fs.writeFileSync('tempData.json', precipFinal, 'utf-8');
+fs.writeFileSync('precipData.json', tempFinal, 'utf-8');
+fs.writeFileSync('finalData.json', finalData, 'utf-8');
