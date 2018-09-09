@@ -5,19 +5,7 @@ import weatherData from './data/tempData.json';
 import './App.css';
 
 class App extends Component {
-
-  convertData = (data) => {
-    return data.map(el => {
-      return {
-        x: el.year+el.mon+el.day, 
-        open: (el.tmax), 
-        close: (el.tmin), 
-        high: 110, 
-        low: -30
-      };
-    });
-  }
-
+  
   render() {
     return (
       <div className="App">
