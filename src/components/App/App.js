@@ -1,35 +1,29 @@
 import React, { Component } from 'react';
-import { VictoryTheme, VictoryAxis, VictoryChart, VictoryCandlestick } from 'victory';
-import { Route, NavLink, Link } from 'react-router-dom'
+import { Route, NavLink, Switch } from 'react-router-dom'
 
-import weatherData from './data/tempData.json';
+import GeneralDisplay from '../../containers/GeneralDisplay/GeneralDisplay';
+import AdvancedDisplay from '../../containers/AdvancedDisplay/AdvancedDisplay';
 import './App.css';
 
 class App extends Component {
-  
   render() {
     return (
       <div className="App">
-        <VictoryChart
-          theme={VictoryTheme.material}
-          domainPadding={{ x: 25 }}
-          scale={{ x: "time" }}
-        >
-          <VictoryAxis tickFormat={(t) => `${t.getDate()}/${t.getMonth()}`}/>
-          <VictoryAxis dependentAxis/>
-          <VictoryCandlestick
-            candleColors={{ positive: "#5f5c5b", negative: "#c43a31" }}
-            data={
-              [
-                {x: 20160601, open: 5, close: 10, high: 15, low: 0},
-                {x: 20160602, open: 10, close: 15, high: 20, low: 5},
-                {x: 20160603, open: 15, close: 20, high: 22, low: 10},
-                {x: 20160604, open: 20, close: 10, high: 25, low: 7},
-                {x: 20160605, open: 10, close: 8, high: 15, low: 5}
-              ]
-            }
-          />
-        </VictoryChart>
+        <div className="header">
+          <h3>Boulder Weather Data</h3>
+          <div className="nav-container">
+            <NavLink exact to='/' className='nav-btn' activeClassName='selected'>
+              <button className="btn-general">General</button>
+            </NavLink>
+            <NavLink exact to='/advanced' className='nav-btn'>
+              <button className="btn-advanced">Advanced</button>
+            </NavLink>
+          </div>
+        </div>
+        <Switch>
+          <Route exact path='/' component={GeneralDisplay} />
+          <Route exact path='/advanced' component={AdvancedDisplay} />
+        </Switch>
       </div>
     );
   }
