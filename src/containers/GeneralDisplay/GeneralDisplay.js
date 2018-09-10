@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { addCurrentYearData, addPreviousYearData, addLastFiveYearsData } from '../../actions';
+import { addCurrentYearData, addPreviousYearData, addLastFiveYearsData, addAllData } from '../../actions';
 import './GeneralDisplay.css';
 
 class GeneralDisplay extends Component {
@@ -19,6 +19,7 @@ class GeneralDisplay extends Component {
     this.getCurrentYear();
     this.getPreviousYear();
     this.getLastFiveYears();
+    this.getAllData();
   }
 
   getCurrentYear = async () => {
@@ -90,6 +91,14 @@ class GeneralDisplay extends Component {
     }
   }
 
+  getAllData = async () => {
+    const url = 'http://localhost:3001/api/v1/all';
+    const response = await fetch(url);
+    const allData = await response.json();
+    
+    this.props.addAllData(allData.weather);
+  }
+
   getAverages = (data) => {
     const months = ["Jan", "Feb", "Mar", "April", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -116,7 +125,7 @@ class GeneralDisplay extends Component {
     const averages = monthData.reduce((averages, day) => {
       averages.tmax += day.tmax;
       averages.tmin += day.tmin;
-      averages.snow += day.snow;
+      averages.snow += day.snowcover;
 
       return averages;
     }, {tmax: 0, tmin: 0, snow: 0})
@@ -156,7 +165,7 @@ class GeneralDisplay extends Component {
     }
 
     return (
-      <div className="GeneralDisplay">
+      <div className="general-display">
         <div className="btn-container">
           <button className="btn-current" onClick={()=> this.handleSelectCurrentYear()}>This Year</button>
           <button className="btn-previous" onClick={()=> this.handleSelectPreviousYear()}>Previous Year</button>
@@ -165,7 +174,9 @@ class GeneralDisplay extends Component {
         <div className="months-display">
         </div>
         <p>Averaged weather from {year}.</p>
-        {weatherCards}
+        <div className="card-container">
+          {weatherCards}
+        </div>
       </div>
     );
   }
@@ -174,13 +185,15 @@ class GeneralDisplay extends Component {
 export const mapStateToProps = (state) => ({
   currentYearData: state.currentYearData,
   previousYearData: state.previousYearData,
-  lastFiveYearsData: state.lastFiveYearsData
+  lastFiveYearsData: state.lastFiveYearsData,
+  allData: state.allData
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   addCurrentYearData: (currentYearData) => dispatch(addCurrentYearData(currentYearData)),
   addPreviousYearData: (previousYearData) => dispatch(addPreviousYearData(previousYearData)),
-  addLastFiveYearsData: (lastFiveYearsData) => dispatch(addLastFiveYearsData(lastFiveYearsData))
+  addLastFiveYearsData: (lastFiveYearsData) => dispatch(addLastFiveYearsData(lastFiveYearsData)),
+  addAllData: (allData) => dispatch(addAllData(allData))
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GeneralDisplay));

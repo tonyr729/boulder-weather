@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Route, NavLink, Switch } from 'react-router-dom'
+import fileDownload from 'react-file-download';
 
 import GeneralDisplay from '../../containers/GeneralDisplay/GeneralDisplay';
 import AdvancedDisplay from '../../containers/AdvancedDisplay/AdvancedDisplay';
+import finalData from '../../data/finalData.json'
 import './App.css';
 
 class App extends Component {
@@ -18,6 +20,7 @@ class App extends Component {
             <NavLink exact to='/advanced' className='nav-btn'>
               <button className="btn-advanced">Advanced</button>
             </NavLink>
+            <button className="btn-download" onClick={()=> fileDownload(JSON.stringify(finalData), 'weather-data.json')}>Download JSON</button>
           </div>
         </div>
         <Switch>

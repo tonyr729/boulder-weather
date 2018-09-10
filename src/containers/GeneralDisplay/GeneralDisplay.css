@@ -1,0 +1,15 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto;
+  width: 40vw; }
+
+.weather-card {
+  width: 10rem; }
+  .weather-card .hi-text {
+    color: #c43a31; }
+  .weather-card .low-text {
+    color: #429bb8; }
+  .weather-card .snow-text {
+    color: #fffff0; }
