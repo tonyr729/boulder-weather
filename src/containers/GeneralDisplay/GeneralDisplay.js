@@ -4,6 +4,19 @@ import './GeneralDisplay.css';
 
 class GeneralDisplay extends Component {
 
+  componentDidMount(){
+    this.getCurrentYear()
+  }
+
+  getCurrentYear = async () => {
+    const currentYear = (new Date()).getFullYear();
+    const url = `http://localhost:3001/api/v1/year/${currentYear}`;
+    const response = await fetch(url);
+    const currentYearData = await response.json();
+
+    this.props.addCurrentYearData(currentYearData);
+  }
+
   render() {
     return (
       <div className="GeneralDisplay">
