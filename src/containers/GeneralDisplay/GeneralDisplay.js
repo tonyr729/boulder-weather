@@ -20,28 +20,37 @@ class GeneralDisplay extends Component {
 
   getCurrentYear = async () => {
     const currentYear = (new Date()).getFullYear();
-    const url = `http://localhost:3001/api/v1/year/2017`;
+    const url = `http://localhost:3001/api/v1/year/${currentYear}`;
     const response = await fetch(url);
     const currentYearData = await response.json();
+
     this.getAverages(currentYearData.year)
     
     this.props.addCurrentYearData(currentYearData.year);
   }
 
+  handleSelectCurrentYear = () => {
+    if(this.props.currentYearData.length) {
+      this.getAverages(this.props.currentYearData);
+    } else {
+      this.getCurrentYear();
+    }
+  }
+
   getAverages = (data) => {
     const averagesTotal = {
-      jan: this.getMonthAverage(data.filter(el => el.mon === 1)),
-      feb: this.getMonthAverage(data.filter(el => el.mon === 2)),
-      mar: this.getMonthAverage(data.filter(el => el.mon === 3)),
-      apr: this.getMonthAverage(data.filter(el => el.mon === 4)),
-      may: this.getMonthAverage(data.filter(el => el.mon === 5)),
-      jun: this.getMonthAverage(data.filter(el => el.mon === 6)),
-      jul: this.getMonthAverage(data.filter(el => el.mon === 7)),
-      aug: this.getMonthAverage(data.filter(el => el.mon === 8)),
-      sep: this.getMonthAverage(data.filter(el => el.mon === 9)),
-      oct: this.getMonthAverage(data.filter(el => el.mon === 10)),
-      nov: this.getMonthAverage(data.filter(el => el.mon === 11)),
-      dec: this.getMonthAverage(data.filter(el => el.mon === 12)),
+      Jan: this.getMonthAverage(data.filter(el => el.mon === 1)),
+      Feb: this.getMonthAverage(data.filter(el => el.mon === 2)),
+      Mar: this.getMonthAverage(data.filter(el => el.mon === 3)),
+      Apr: this.getMonthAverage(data.filter(el => el.mon === 4)),
+      May: this.getMonthAverage(data.filter(el => el.mon === 5)),
+      Jun: this.getMonthAverage(data.filter(el => el.mon === 6)),
+      Jul: this.getMonthAverage(data.filter(el => el.mon === 7)),
+      Aug: this.getMonthAverage(data.filter(el => el.mon === 8)),
+      Sep: this.getMonthAverage(data.filter(el => el.mon === 9)),
+      Oct: this.getMonthAverage(data.filter(el => el.mon === 10)),
+      Nov: this.getMonthAverage(data.filter(el => el.mon === 11)),
+      Dec: this.getMonthAverage(data.filter(el => el.mon === 12)),
     };
     
     if(!this.state.isLoaded) {
@@ -63,32 +72,51 @@ class GeneralDisplay extends Component {
 
       return averages;
     }, {tmax: 0, tmin: 0, snow: 0})
+  
+    if (averages.tmax !== 0) {
+      averages.tmax = Math.round((averages.tmax / days) * 10) / 10 + "°f";
+      averages.tmin = Math.round((averages.tmin / days) * 10) / 10 + "°f";
+      averages.snow = Math.round((averages.snow / days) * 10) / 10 + "in";
+    } else {
+      averages.tmax = "No Record";
+      averages.tmin = "No Record";
+      averages.snow = "No Record";
+    }
 
-    averages.tmax = Math.round((averages.tmax / days) * 10) / 10;
-    averages.tmin = Math.round((averages.tmin / days) * 10) / 10;
-    averages.snow = Math.round((averages.snow / days) * 10) / 10;
-    
-    return averages
+    return averages;
   }
 
   render() {
     let year;
-    let janHigh;
+    let weatherCards;
+
     if (this.props.currentYearData.length) {
-      year = this.props.currentYearData[0].year
-      janHigh = this.state.averages.jan.tmax
+      year = this.props.currentYearData[0].year;
+      let currentSelection = this.state.averages;
+
+      weatherCards = Object.keys(currentSelection).map((monthName, index) => {
+        const monthData = currentSelection[monthName];
+        return (
+          <div className="weather-card" key={index}>
+            <h2>{monthName}</h2>
+            <p className="hi-text">Hi: <span>{monthData.tmax}</span></p>
+            <p className="low-text">Low: <span>{monthData.tmin}</span></p>
+            <p className="snow-text">Snow: {monthData.snow}</p>
+          </div>
+        );
+      });
     }
     return (
       <div className="GeneralDisplay">
-        <div className="timeframe-container">
-          <button className="btn-current">This Year</button>
-          <button className="btn-previous">Previous Year</button>
+        <div className="btn-container">
+          <button className="btn-current" onClick={()=> this.handleSelectCurrentYear()}>This Year</button>
+          <button className="btn-previous" onClick={()=> this.handleSelectPreviousYear()}>Previous Year</button>
           <button className="btn-pastfive">Past 5 Years</button>
         </div>
         <div className="months-display">
         </div>
         <p>Typical weather in {year}.</p>
-        <p>January's average high is {janHigh}</p>
+        {weatherCards}
       </div>
     );
   }
