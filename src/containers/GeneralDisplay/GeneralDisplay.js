@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
+import { addCurrentYearData } from '../../actions';
 import './GeneralDisplay.css';
 
 class GeneralDisplay extends Component {
@@ -33,6 +36,11 @@ class GeneralDisplay extends Component {
   }
 }
 
-export default GeneralDisplay;
+
+export const mapDispatchToProps = (dispatch) => ({
+  addCurrentYearData: (currentYearData) => dispatch(addCurrentYearData(currentYearData))
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GeneralDisplay));
 
 
