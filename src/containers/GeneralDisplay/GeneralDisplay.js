@@ -10,7 +10,7 @@ class GeneralDisplay extends Component {
     super();
     this.state = {
       isLoaded: false,
-      currentSelection: null,
+      selectedYear: null,
       averages: null
     }
   }
@@ -36,7 +36,7 @@ class GeneralDisplay extends Component {
     if(this.props.currentYearData.length) {
       const yearData = this.props.currentYearData;
       this.setState({
-        currentSelection: yearData[0].year,
+        selectedYear: yearData[0].year,
         averages: this.getAverages(yearData)
       })
     } else {
@@ -58,7 +58,7 @@ class GeneralDisplay extends Component {
       const yearData = this.props.previousYearData;
       
       this.setState({
-        currentSelection: yearData[0].year,
+        selectedYear: yearData[0].year,
         averages: this.getAverages(yearData)
       })
     } else {
@@ -82,7 +82,7 @@ class GeneralDisplay extends Component {
       const yearData = this.props.lastFiveYearsData;
       
       this.setState({
-        currentSelection: `${fiveYearsAgo} to ${currentYear}`,
+        selectedYear: `${fiveYearsAgo} to ${currentYear}`,
         averages: this.getAverages(yearData)
       })
     } else {
@@ -103,7 +103,7 @@ class GeneralDisplay extends Component {
     if (!this.state.isLoaded) {
       this.setState({
         isLoaded: true,
-        currentSelection: data[0].year,
+        selectedYear: data[0].year,
         averages: averagesTotal
       });
     }
@@ -139,11 +139,11 @@ class GeneralDisplay extends Component {
     let weatherCards;
 
     if (this.props.currentYearData.length) {
-      year = this.state.currentSelection;
-      let currentSelection = this.state.averages;
+      year = this.state.selectedYear;
+      let selectedAverages = this.state.averages;
 
-      weatherCards = Object.keys(currentSelection).map((monthName, index) => {
-        const monthData = currentSelection[monthName];
+      weatherCards = Object.keys(selectedAverages).map((monthName, index) => {
+        const monthData = selectedAverages[monthName];
         return (
           <div className="weather-card" key={index}>
             <h2>{monthName}</h2>
@@ -164,7 +164,7 @@ class GeneralDisplay extends Component {
         </div>
         <div className="months-display">
         </div>
-        <p>Typical weather from {year}.</p>
+        <p>Averaged weather from {year}.</p>
         {weatherCards}
       </div>
     );
