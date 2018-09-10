@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { addCurrentYearData, addPreviousYearData } from '../../actions';
+import { addCurrentYearData, addPreviousYearData, addLastFiveYearsData } from '../../actions';
 import './GeneralDisplay.css';
 
 class GeneralDisplay extends Component {
@@ -16,8 +16,9 @@ class GeneralDisplay extends Component {
   }
 
   componentDidMount(){
-    this.getCurrentYear()
-    this.getPreviousYear()
+    this.getCurrentYear();
+    this.getPreviousYear();
+    this.getLastFiveYears();
   }
 
   getCurrentYear = async () => {
@@ -62,6 +63,30 @@ class GeneralDisplay extends Component {
       })
     } else {
       this.getPreviousYear();
+    }
+  }
+
+  getLastFiveYears = async () => {
+    const url = `http://localhost:3001/api/v1/last5`;
+    const response = await fetch(url);
+    const lastFiveYearsData = await response.json();
+    
+    this.props.addLastFiveYearsData(lastFiveYearsData.years);
+  }
+
+  handleSelectLastFiveYears = () => {
+    const currentYear = ((new Date()).getFullYear())
+    const fiveYearsAgo = currentYear - 5;
+
+    if (this.props.lastFiveYearsData.length) {
+      const yearData = this.props.lastFiveYearsData;
+      
+      this.setState({
+        currentSelection: `${fiveYearsAgo} to ${currentYear}`,
+        averages: this.getAverages(yearData)
+      })
+    } else {
+      this.getLastFiveYears();
     }
   }
 
@@ -135,11 +160,11 @@ class GeneralDisplay extends Component {
         <div className="btn-container">
           <button className="btn-current" onClick={()=> this.handleSelectCurrentYear()}>This Year</button>
           <button className="btn-previous" onClick={()=> this.handleSelectPreviousYear()}>Previous Year</button>
-          <button className="btn-pastfive">Past 5 Years</button>
+          <button className="btn-pastfive" onClick={()=> this.handleSelectLastFiveYears()}>Past 5 Years</button>
         </div>
         <div className="months-display">
         </div>
-        <p>Typical weather in {year}.</p>
+        <p>Typical weather from {year}.</p>
         {weatherCards}
       </div>
     );
@@ -148,12 +173,14 @@ class GeneralDisplay extends Component {
 
 export const mapStateToProps = (state) => ({
   currentYearData: state.currentYearData,
-  previousYearData: state.previousYearData
+  previousYearData: state.previousYearData,
+  lastFiveYearsData: state.lastFiveYearsData
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   addCurrentYearData: (currentYearData) => dispatch(addCurrentYearData(currentYearData)),
-  addPreviousYearData: (previousYearData) => dispatch(addPreviousYearData(previousYearData))
+  addPreviousYearData: (previousYearData) => dispatch(addPreviousYearData(previousYearData)),
+  addLastFiveYearsData: (lastFiveYearsData) => dispatch(addLastFiveYearsData(lastFiveYearsData))
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GeneralDisplay));
