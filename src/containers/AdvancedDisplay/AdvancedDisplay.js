@@ -27,7 +27,7 @@ class AdvancedDisplay extends Component {
     let allData = null;
 
     if (!this.props.allData.length) {
-      const url = 'http://localhost:3001/api/v1/all';
+      const url = 'https://boulder-weather.herokuapp.com/api/v1/all';
       const response = await fetch(url);
       const allData = await response.json();
       
