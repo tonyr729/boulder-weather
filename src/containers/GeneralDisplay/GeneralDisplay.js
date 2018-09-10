@@ -16,11 +16,15 @@ class GeneralDisplay extends Component {
     const url = `http://localhost:3001/api/v1/year/${currentYear}`;
     const response = await fetch(url);
     const currentYearData = await response.json();
-
-    this.props.addCurrentYearData(currentYearData);
+    
+    this.props.addCurrentYearData(currentYearData.year);
   }
 
   render() {
+    let year;
+    if (this.props.currentYearData.length) {
+      year = this.props.currentYearData[0].year
+    }
     return (
       <div className="GeneralDisplay">
         <div className="timeframe-container">
@@ -30,12 +34,15 @@ class GeneralDisplay extends Component {
         </div>
         <div className="months-display">
         </div>
-        
+        <p>Typical weather in {year}.</p>
       </div>
     );
   }
 }
 
+export const mapStateToProps = (state) => ({
+  currentYearData: state.currentYearData
+});
 
 export const mapDispatchToProps = (dispatch) => ({
   addCurrentYearData: (currentYearData) => dispatch(addCurrentYearData(currentYearData))
