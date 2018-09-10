@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { addCurrentYearData } from '../../actions';
+import { addCurrentYearData, addPreviousYearData } from '../../actions';
 import './GeneralDisplay.css';
 
 class GeneralDisplay extends Component {
@@ -10,12 +10,14 @@ class GeneralDisplay extends Component {
     super();
     this.state = {
       isLoaded: false,
+      currentSelection: null,
       averages: null
     }
   }
 
   componentDidMount(){
     this.getCurrentYear()
+    this.getPreviousYear()
   }
 
   getCurrentYear = async () => {
@@ -31,31 +33,52 @@ class GeneralDisplay extends Component {
 
   handleSelectCurrentYear = () => {
     if(this.props.currentYearData.length) {
-      this.getAverages(this.props.currentYearData);
+      const yearData = this.props.currentYearData;
+      this.setState({
+        currentSelection: yearData[0].year,
+        averages: this.getAverages(yearData)
+      })
     } else {
       this.getCurrentYear();
     }
   }
 
-  getAverages = (data) => {
-    const averagesTotal = {
-      Jan: this.getMonthAverage(data.filter(el => el.mon === 1)),
-      Feb: this.getMonthAverage(data.filter(el => el.mon === 2)),
-      Mar: this.getMonthAverage(data.filter(el => el.mon === 3)),
-      Apr: this.getMonthAverage(data.filter(el => el.mon === 4)),
-      May: this.getMonthAverage(data.filter(el => el.mon === 5)),
-      Jun: this.getMonthAverage(data.filter(el => el.mon === 6)),
-      Jul: this.getMonthAverage(data.filter(el => el.mon === 7)),
-      Aug: this.getMonthAverage(data.filter(el => el.mon === 8)),
-      Sep: this.getMonthAverage(data.filter(el => el.mon === 9)),
-      Oct: this.getMonthAverage(data.filter(el => el.mon === 10)),
-      Nov: this.getMonthAverage(data.filter(el => el.mon === 11)),
-      Dec: this.getMonthAverage(data.filter(el => el.mon === 12)),
-    };
+  getPreviousYear = async () => {
+    const previousYear = ((new Date()).getFullYear()) - 1;
+    const url = `http://localhost:3001/api/v1/year/${previousYear}`;
+    const response = await fetch(url);
+    const previousYearData = await response.json();
     
-    if(!this.state.isLoaded) {
+    this.props.addPreviousYearData(previousYearData.year);
+  }
+
+  handleSelectPreviousYear = () => {
+    if(this.props.previousYearData.length) {
+      const yearData = this.props.previousYearData;
+      
+      this.setState({
+        currentSelection: yearData[0].year,
+        averages: this.getAverages(yearData)
+      })
+    } else {
+      this.getPreviousYear();
+    }
+  }
+
+  getAverages = (data) => {
+    const months = ["Jan", "Feb", "Mar", "April", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const averagesTotal = months.reduce((averages, month, index) =>{
+      if (!averages[month]){
+        averages[month] = this.getMonthAverage(data.filter(el => el.mon === (index + 1)));
+      }
+      return averages;
+    }, {});
+    
+    if (!this.state.isLoaded) {
       this.setState({
         isLoaded: true,
+        currentSelection: data[0].year,
         averages: averagesTotal
       });
     }
@@ -91,7 +114,7 @@ class GeneralDisplay extends Component {
     let weatherCards;
 
     if (this.props.currentYearData.length) {
-      year = this.props.currentYearData[0].year;
+      year = this.state.currentSelection;
       let currentSelection = this.state.averages;
 
       weatherCards = Object.keys(currentSelection).map((monthName, index) => {
@@ -106,6 +129,7 @@ class GeneralDisplay extends Component {
         );
       });
     }
+
     return (
       <div className="GeneralDisplay">
         <div className="btn-container">
@@ -123,11 +147,13 @@ class GeneralDisplay extends Component {
 }
 
 export const mapStateToProps = (state) => ({
-  currentYearData: state.currentYearData
+  currentYearData: state.currentYearData,
+  previousYearData: state.previousYearData
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  addCurrentYearData: (currentYearData) => dispatch(addCurrentYearData(currentYearData))
+  addCurrentYearData: (currentYearData) => dispatch(addCurrentYearData(currentYearData)),
+  addPreviousYearData: (previousYearData) => dispatch(addPreviousYearData(previousYearData))
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GeneralDisplay));
