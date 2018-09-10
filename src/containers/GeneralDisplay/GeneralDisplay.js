@@ -24,7 +24,7 @@ class GeneralDisplay extends Component {
 
   getCurrentYear = async () => {
     const currentYear = (new Date()).getFullYear();
-    const url = `http://localhost:3001/api/v1/year/${currentYear}`;
+    const url = `https://boulder-weather.herokuapp.com/api/v1/year/${currentYear}`;
     const response = await fetch(url);
     const currentYearData = await response.json();
 
@@ -47,7 +47,7 @@ class GeneralDisplay extends Component {
 
   getPreviousYear = async () => {
     const previousYear = ((new Date()).getFullYear()) - 1;
-    const url = `http://localhost:3001/api/v1/year/${previousYear}`;
+    const url = `https://boulder-weather.herokuapp.com/api/v1/year/${previousYear}`;
     const response = await fetch(url);
     const previousYearData = await response.json();
     
@@ -68,7 +68,7 @@ class GeneralDisplay extends Component {
   }
 
   getLastFiveYears = async () => {
-    const url = `http://localhost:3001/api/v1/last5`;
+    const url = `https://boulder-weather.herokuapp.com/api/v1/last5`;
     const response = await fetch(url);
     const lastFiveYearsData = await response.json();
     
@@ -92,7 +92,7 @@ class GeneralDisplay extends Component {
   }
 
   getAllData = async () => {
-    const url = 'http://localhost:3001/api/v1/all';
+    const url = 'https://boulder-weather.herokuapp.com/api/v1/all';
     const response = await fetch(url);
     const allData = await response.json();
     
