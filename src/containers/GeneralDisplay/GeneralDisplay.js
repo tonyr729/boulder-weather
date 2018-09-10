@@ -11,7 +11,7 @@ class GeneralDisplay extends Component {
     this.state = {
       isLoaded: false,
       selectedYear: null,
-      averages: null
+      averages: []
     }
   }
 
