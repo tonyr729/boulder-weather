@@ -1,0 +1,10 @@
+.advanced-display {
+  height: 80vh; }
+  .advanced-display .max-temp {
+    color: #c43a31; }
+  .advanced-display .min-temp {
+    color: #429bb8; }
+  .advanced-display .snowcover {
+    color: #fffff0; }
+  .advanced-display .snowfall {
+    color: #2f4ac2; }
