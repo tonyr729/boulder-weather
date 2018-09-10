@@ -36,9 +36,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Set Up
 
-* First clone and run the backend server [here](https://github.com/tonyr729/boulder-backend)
+* Backend hosted on Heroku. View repo [here](https://github.com/tonyr729/boulder-backend)
 
 * Clone this project
+
+* Insure you have [NPM](https://www.npmjs.com/)
 
 * Run `npm install` from the root directory
 
