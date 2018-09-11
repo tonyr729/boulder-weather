@@ -35,9 +35,9 @@ Once my data was in the Store I was able to do some conversion to the required x
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-## Set Up
+Backend hosted on Heroku. View repo [here](https://github.com/tonyr729/boulder-backend)
 
-* Backend hosted on Heroku. View repo [here](https://github.com/tonyr729/boulder-backend)
+## Set Up
 
 * Clone this repo
 
